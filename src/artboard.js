@@ -95,10 +95,21 @@ artboardjs.Scene.prototype.Draw = function(){
   var context = this.context;
   for(var i=0; i<this.objects.length; i++){
     var object = objects[i];
-    context.beginPath();
-    context.arc(object.transform.position.x,object.transform.position.y,object.transform.width/2,0,2*Math.PI);
-    context.fillStyle = 'green';
-    context.fill();
+    context.save();
+    context.translate(object.transform.position.x+(object.transform.width/2), object.transform.position.y+(object.transform.height/2));
+    context.rotate(object.rotation);
+    if(object.type=='Circle'){
+      context.beginPath();
+      context.arc(object.transform.position.x,object.transform.position.y,object.transform.width/2,0,2*Math.PI);
+      context.fillStyle = 'green';
+      context.fill();
+    }
+    else if (object.type=='Rectangle') {
+      context.beginPath();
+      context.fillStyle = 'green';
+      context.fillRect(-object.transform.width/2,-object.transform.height/2,object.transform.width,object.transform.height);
+    }
+    context.restore();
   }
 }
 
@@ -133,17 +144,10 @@ artboardjs.SceneObject = function(){
   return this;
 }
 
-// artboardjs.SceneObject.prototype.transform = function(){
-//   this.position = {
-//     x: 0,
-//     y: 0
-//   }
-//   this.rotation = 0;
-//   this.width = 0;
-//   this.height = 0;
-//   return this;
-// }
-
+artboardjs.SceneObject.prototype.Rotate = function(rotation){
+  this.rotation = rotation;
+  return this;
+}
 
 /*==============================================================================
 #CREATE PRIMITIVE
